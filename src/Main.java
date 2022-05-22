@@ -1,3 +1,7 @@
+import GraphicsCard.Enums;
+import GraphicsCard.Manufactures.Amd_graphics;
+import GraphicsCard.Manufactures.Intel_graphics;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -39,13 +43,11 @@ class Menu extends JFrame implements ActionListener{
         setTitle("Videókártya leltár");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        String[] column = {"ID","Manufecturer","Type","Vram","TDP","Value","Score"};
-        String[][] data = new String[][] { {"0","AMD","RX 460","2GB","40W","200$","123"}};
-        DefaultTableModel model = new DefaultTableModel(data,column);
-        table = new JTable(model);
-        add(new JScrollPane(table),BorderLayout.CENTER);
+
+
 
         // MENUBAR ---------------------------------------------------------------->
+
         JMenuBar menubar = new JMenuBar();
         setJMenuBar(menubar);
         JMenu file = new JMenu("File");
@@ -63,22 +65,44 @@ class Menu extends JFrame implements ActionListener{
         file.add(addItem);
         file.add(delItem);
 
-
-
         openItem.addActionListener(this);
         addItem.addActionListener(this);
         delItem.addActionListener(this);
         modItem.addActionListener(this);
 
-
-
-
         // MENUBAR ---------------------------------------------------------------->
 
-        add(table);
+
+        // TABLE ---------------------------------------------------------------->
+        String[] column = {"ID","Manufecturer","Type","Vram","TDP","Value","Score"}; // Oszlopok
+
+        Amd_graphics gpu1 = new Amd_graphics(Enums.AMD.RX550, Enums.Brand.Gigabyte,300,6,50,"Aurus");//Teszt példányok
+        Intel_graphics gpu2 = new Intel_graphics(Enums.Intel.Iris_X, Enums.Brand.Gigabyte,33,2,22,"Szar");//Teszt példányok
+
+        //Teszt adat
+        String[][] data = new String[][] {
+                {String.valueOf(gpu1.getID()), String.valueOf(gpu1.getManufacture()), String.valueOf(gpu1.getType()),
+                        String.valueOf(gpu1.getVram()), String.valueOf(gpu1.getTDP()), String.valueOf(gpu1.getValue()),gpu1.getName()},
+                {String.valueOf(gpu2.getID()), String.valueOf(gpu2.getManufacture()), String.valueOf(gpu2.getType()),
+                        String.valueOf(gpu2.getVram()), String.valueOf(gpu2.getTDP()), String.valueOf(gpu2.getValue()),gpu2.getName()}
+        };
+
+        DefaultTableModel model = new DefaultTableModel(data,column);
+        table = new JTable(model){
+            public boolean isCellEditable(int row,int column){
+                return false; //Szerkezthetőség letíltása
+            }
+        }; // Tábla létrehozása
+
+        JScrollPane sp = new JScrollPane(table);
+        add(sp); // Táblázat hozzáadása
+        // TABLE ---------------------------------------------------------------->
+
+
         setSize(800,800);
         setVisible(true);
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
