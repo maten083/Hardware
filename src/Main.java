@@ -186,7 +186,7 @@ class Menu extends JFrame implements ActionListener{
             Name.setBounds(270,20,100,30);
             // Megnevezés megadásának vége
 
-            // Gomb megadása
+            // Gomb megadás
             JButton Confirm = new JButton("Véglegesít");
             Confirm.setBackground(Color.LIGHT_GRAY);
             Confirm.setBounds(310,80,100,30);
