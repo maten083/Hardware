@@ -51,7 +51,15 @@ class Menu extends JFrame implements ActionListener{
         JMenuBar menubar = new JMenuBar();
         setJMenuBar(menubar);
         JMenu file = new JMenu("File");
-        modItem = new JMenuItem("MOD");
+        modItem = new JMenuItem("Modification"){ //csak azért hogy ne foglalja el az összes helyet a menubar-ban
+            @Override
+            public Dimension getMaximumSize(){
+                Dimension d1 = super.getPreferredSize();
+                Dimension d2 = super.getMaximumSize();
+                d2.width=d1.width;
+                return d2;
+            }
+        };
 
         openItem = new JMenuItem("- Open -");
         addItem = new JMenuItem("- Add data -");
@@ -74,16 +82,16 @@ class Menu extends JFrame implements ActionListener{
 
 
         // TABLE ---------------------------------------------------------------->
-        String[] column = {"ID","Manufecturer","Type","Vram","TDP","Value","Score"}; // Oszlopok
+        String[] column = {"ID","Manufecturer","Brand","Type","Vram","TDP","Value","Name","Score"}; // Oszlopok
 
         Amd_graphics gpu1 = new Amd_graphics(Enums.AMD.RX550, Enums.Brand.Gigabyte,300,6,50,"Aurus");//Teszt példányok
         Intel_graphics gpu2 = new Intel_graphics(Enums.Intel.Iris_X, Enums.Brand.Gigabyte,33,2,22,"Szar");//Teszt példányok
 
         //Teszt adat
         String[][] data = new String[][] {
-                {String.valueOf(gpu1.getID()), String.valueOf(gpu1.getManufacture()), String.valueOf(gpu1.getType()),
+                {String.valueOf(gpu1.getID()), String.valueOf(gpu1.getManufacture()), String.valueOf(gpu1.getBrands()), String.valueOf(gpu1.getType()),
                         String.valueOf(gpu1.getVram()), String.valueOf(gpu1.getTDP()), String.valueOf(gpu1.getValue()),gpu1.getName()},
-                {String.valueOf(gpu2.getID()), String.valueOf(gpu2.getManufacture()), String.valueOf(gpu2.getType()),
+                {String.valueOf(gpu2.getID()), String.valueOf(gpu2.getManufacture()), String.valueOf(gpu2.getBrands()), String.valueOf(gpu2.getType()),
                         String.valueOf(gpu2.getVram()), String.valueOf(gpu2.getTDP()), String.valueOf(gpu2.getValue()),gpu2.getName()}
         };
 
@@ -105,6 +113,30 @@ class Menu extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == modItem){
+            modosit();
+        }
+    }
+    public void modosit(){
+        if (table.getSelectedRow() != -1){
+            JFrame mod = new JFrame();
 
+            JLabel lb1,lb2,lb3,lb4,lb5,lb6;
+            JComboBox<Enums.Brand> Brandbox = new JComboBox<>();
+            Brandbox.setModel(new DefaultComboBoxModel<>(Enums.Brand.values()));
+            Brandbox.setBounds(50,50,90,20);
+
+            mod.add(Brandbox);
+            //MADE IN PROGGRESS
+
+            mod.setDefaultCloseOperation(EXIT_ON_CLOSE);
+            mod.setLocationRelativeTo(null);
+            mod.setLayout(null);
+            mod.setSize(500,300);
+            mod.setVisible(true);
+
+        }else {
+            JOptionPane.showMessageDialog(null,"Nincs kiválasztva sor","Hiba",JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

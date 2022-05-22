@@ -1,6 +1,8 @@
 package GraphicsCard;
 
 public class Enums {
+
+
     public enum Manufacture{
         Nvidia,AMD,Intel
     }
