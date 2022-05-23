@@ -1,7 +1,7 @@
 package GraphicsCard;
 
 public abstract class Gpu {
-    protected int ID;
+
     protected Enums.Manufacture manufacture;
     protected Enums.Brand brands;
     protected int value;
@@ -16,9 +16,7 @@ public abstract class Gpu {
         this.name = name;
     }
 
-    public int getID() {
-        return ID;
-    }
+
 
     public Enums.Manufacture getManufacture() {
         return manufacture;

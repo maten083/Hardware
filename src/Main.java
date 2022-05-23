@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class Main {
 
@@ -26,7 +27,7 @@ public class Main {
 
 class Menu extends JFrame implements ActionListener{
 
-    JMenuItem openItem;
+    JMenuItem calcScoreItem;
     JMenuItem addItem;
     JMenuItem delItem;
     JMenuItem modItem;
@@ -60,6 +61,15 @@ class Menu extends JFrame implements ActionListener{
                 return d2;
             }
         };
+        calcScoreItem = new JMenuItem("Calculate Score"){ //csak azért hogy ne foglalja el az összes helyet a menubar-ban
+            @Override
+            public Dimension getMaximumSize(){
+                Dimension d1 = super.getPreferredSize();
+                Dimension d2 = super.getMaximumSize();
+                d2.width=d1.width;
+                return d2;
+            }
+        };
 
 
         addItem = new JMenuItem("- Add data -");
@@ -82,17 +92,18 @@ class Menu extends JFrame implements ActionListener{
 
 
         // TABLE ---------------------------------------------------------------->
-        String[] column = {"ID","Manufecturer","Brand","Type","Vram","TDP","Value","Name","Score"}; // Oszlopok
+        String[] column = {"Manufecturer","Brand","Type","Vram","TDP","Value","Name","Score"}; // Oszlopok
 
         Amd_graphics gpu1 = new Amd_graphics(Enums.AMD.RX550, Enums.Brand.Gigabyte,300,6,50,"Aurus");//Teszt példányok
         Intel_graphics gpu2 = new Intel_graphics(Enums.Intel.Iris_X, Enums.Brand.Gigabyte,50,2,22,"Szar");//Teszt példányok
 
         //Teszt adat
         String[][] data = new String[][] {
-                {String.valueOf(gpu1.getID()), String.valueOf(gpu1.getManufacture()), String.valueOf(gpu1.getBrands()), String.valueOf(gpu1.getType()),
-                        String.valueOf(gpu1.getVram()), String.valueOf(gpu1.getTDP()), String.valueOf(gpu1.getValue()),gpu1.getName()},
-                {String.valueOf(gpu2.getID()), String.valueOf(gpu2.getManufacture()), String.valueOf(gpu2.getBrands()), String.valueOf(gpu2.getType()),
-                        String.valueOf(gpu2.getVram()), String.valueOf(gpu2.getTDP()), String.valueOf(gpu2.getValue()),gpu2.getName()}
+                {String.valueOf(gpu1.getManufacture()), String.valueOf(gpu1.getBrands()), String.valueOf(gpu1.getType()),
+                        String.valueOf(gpu1.getVram())+" GB", String.valueOf(gpu1.getTDP())+" W", String.valueOf(gpu1.getValue())+" $",gpu1.getName()},
+
+                {String.valueOf(gpu2.getManufacture()), String.valueOf(gpu2.getBrands()), String.valueOf(gpu2.getType()),
+                        String.valueOf(gpu2.getVram())+" GB", String.valueOf(gpu2.getTDP())+" W", String.valueOf(gpu2.getValue())+" $",gpu2.getName()}
         };
 
         model = new DefaultTableModel(data,column);
@@ -172,27 +183,30 @@ class Menu extends JFrame implements ActionListener{
                 Amdbox.getModel().setSelectedItem(String.valueOf(table.getValueAt(table.getSelectedRow(),2)));
                 Amdbox.setBounds(150,20,90,20);
                 mod.add(Amdbox);
-            }else if (String.valueOf(table.getValueAt(table.getSelectedRow(),1)).equals("Intel")){
-                Intelbox.getModel().setSelectedItem(String.valueOf(table.getValueAt(table.getSelectedRow(),3)));
+            }else if (String.valueOf(table.getValueAt(table.getSelectedRow(),0)).equals("Intel")){
+                Intelbox.getModel().setSelectedItem(String.valueOf(table.getValueAt(table.getSelectedRow(),2)));
                 Intelbox.setBounds(150,20,90,20);
                 mod.add(Intelbox);
-            }else if(String.valueOf(table.getValueAt(table.getSelectedRow(),1)).equals("Nvidia")){
-                Nvidiabox.getModel().setSelectedItem(String.valueOf(table.getValueAt(table.getSelectedRow(),3)));
+            }else if(String.valueOf(table.getValueAt(table.getSelectedRow(),0)).equals("Nvidia")){
+                Nvidiabox.getModel().setSelectedItem(String.valueOf(table.getValueAt(table.getSelectedRow(),2)));
                 Nvidiabox.setBounds(150,20,90,20);
                 mod.add(Nvidiabox);
             }
             // Videókárty gyártó megállapításának vége
 
             // Számérték megadásának kezdete
-            SpinnerNumberModel Vramvalue = new SpinnerNumberModel(Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),4)),1,24,1);
+            String Vramstr = String.valueOf(table.getValueAt(table.getSelectedRow(),3));
+            SpinnerNumberModel Vramvalue = new SpinnerNumberModel(Integer.parseInt(Vramstr.substring(0,Vramstr.length()-3)),1,24,1);
             JSpinner Vramspinner = new JSpinner(Vramvalue);
             Vramspinner.setBounds(20,80,50,30);
 
-            SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),5)),1,120,2);
+            String tdpstr = String.valueOf(table.getValueAt(table.getSelectedRow(),4));
+            SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(Integer.parseInt(tdpstr.substring(0,tdpstr.length()-2)),1,500,2);
             JSpinner Tdpspinner = new JSpinner(Tdpvalue);
             Tdpspinner.setBounds(100,80,50,30);
 
-            SpinnerNumberModel VValue = new SpinnerNumberModel(Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),6)),50,10000,20);
+            String Vvaluestr = String.valueOf(table.getValueAt(table.getSelectedRow(),5));
+            SpinnerNumberModel VValue = new SpinnerNumberModel(Integer.parseInt(Vvaluestr.substring(0,Vvaluestr.length()-2)),50,10000,20);
             JSpinner Value = new JSpinner(VValue);
             Value.setBounds(180,80,100,30);
             // Számérték megadás vége
@@ -211,14 +225,14 @@ class Menu extends JFrame implements ActionListener{
             // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
             Confirm.addActionListener(e -> {
 
-                table.setValueAt(Brandbox.getSelectedItem(),table.getSelectedRow(),2);
+                table.setValueAt(Brandbox.getSelectedItem(),table.getSelectedRow(),1);
 
-                if(String.valueOf(table.getValueAt(table.getSelectedRow(),1)).equals("AMD")){
-                    table.setValueAt(Amdbox.getSelectedItem(),table.getSelectedRow(),3);
-                }else if (String.valueOf(table.getValueAt(table.getSelectedRow(),1)).equals("Intel")){
-                    table.setValueAt(Intelbox.getSelectedItem(),table.getSelectedRow(),3);
-                }else if(String.valueOf(table.getValueAt(table.getSelectedRow(),1)).equals("Nvidia")){
-                    table.setValueAt(Nvidiabox.getSelectedItem(),table.getSelectedRow(),3);
+                if(String.valueOf(table.getValueAt(table.getSelectedRow(),0)).equals("AMD")){
+                    table.setValueAt(Amdbox.getSelectedItem(),table.getSelectedRow(),2);
+                }else if (String.valueOf(table.getValueAt(table.getSelectedRow(),0)).equals("Intel")){
+                    table.setValueAt(Intelbox.getSelectedItem(),table.getSelectedRow(),2);
+                }else if(String.valueOf(table.getValueAt(table.getSelectedRow(),0)).equals("Nvidia")){
+                    table.setValueAt(Nvidiabox.getSelectedItem(),table.getSelectedRow(),2);
                 }
 
                 table.setValueAt(Vramvalue.getValue()+" GB",table.getSelectedRow(),3);
@@ -342,7 +356,7 @@ class Menu extends JFrame implements ActionListener{
 
         // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
         Confirm.addActionListener(e -> {
-            model.addRow(new Object[]{"0","AMD",Brandbox.getSelectedItem(),Amdbox.getSelectedItem(),Vramspinner.getValue(),Tdpspinner.getValue(),VValue.getValue(),Name.getText()});
+            model.addRow(new Object[]{Enums.Manufacture.AMD,Brandbox.getSelectedItem(),Amdbox.getSelectedItem(),Vramspinner.getValue()+" GB",Tdpspinner.getValue()+" W",VValue.getValue()+" $",Name.getText()});
             JOptionPane.showMessageDialog(null,"Sikeres hozzáadás");
         });
 
@@ -421,7 +435,7 @@ class Menu extends JFrame implements ActionListener{
 
         // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
         Confirm.addActionListener(e -> {
-            model.addRow(new Object[]{"0","AMD",Brandbox.getSelectedItem(),Nvidiabox.getSelectedItem(),Vramspinner.getValue(),Tdpspinner.getValue(),VValue.getValue(),Name.getText()});
+            model.addRow(new Object[]{Enums.Manufacture.Nvidia,Brandbox.getSelectedItem(),Nvidiabox.getSelectedItem(),Vramspinner.getValue()+" GB",Tdpspinner.getValue()+" W",VValue.getValue()+" $",Name.getText()});
             JOptionPane.showMessageDialog(null,"Sikeres hozzáadás");
         });
         //Gomb action vége
@@ -500,7 +514,7 @@ class Menu extends JFrame implements ActionListener{
 
         // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
         Confirm.addActionListener(e -> {
-            model.addRow(new Object[]{"0","AMD",Brandbox.getSelectedItem(),Intelbox.getSelectedItem(),Vramspinner.getValue(),Tdpspinner.getValue(),VValue.getValue(),Name.getText()});
+            model.addRow(new Object[]{Enums.Manufacture.Intel,Brandbox.getSelectedItem(),Intelbox.getSelectedItem(),Vramspinner.getValue()+" GB",Tdpspinner.getValue()+" W",VValue.getValue()+" $",Name.getText()});
             JOptionPane.showMessageDialog(null,"Sikeres hozzáadás");
         });
         //Gomb action vége
