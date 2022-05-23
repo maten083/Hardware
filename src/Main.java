@@ -118,39 +118,7 @@ class Menu extends JFrame implements ActionListener{
             Modosit();
         }
         if (e.getSource() == addItem){
-            JFrame selectFrame = new JFrame();
-            JButton amd,intel,nvidia;
-
-            amd = new JButton("AMD");
-            amd.setBounds(20,30,100,50);
-            amd.setBackground(Color.lightGray);
-            amd.addActionListener(AmdAction -> {
-                AddRowAMD();
-            });
-
-            intel = new JButton("Intel");
-            intel.setBounds(120,30,100,50);
-            intel.setBackground(Color.lightGray);
-            intel.addActionListener(IntelAction ->{
-                AddRowIntel();
-            });
-
-            nvidia = new JButton("Nvidia");
-            nvidia.setBounds(220,30,100,50);
-            nvidia.setBackground(Color.lightGray);
-            nvidia.addActionListener(NvidiaAction->{
-                AddRowNvidia();
-            });
-
-            selectFrame.add(amd);
-            selectFrame.add(intel);
-            selectFrame.add(nvidia);
-
-            selectFrame.setLocationRelativeTo(null);
-            selectFrame.setLayout(null);
-            selectFrame.setSize(360,150);
-            selectFrame.setVisible(true);
-            //AddRow();
+            AddRow();
         }
         if (e.getSource() == delItem){
             model.removeRow(table.getSelectedRow());
@@ -278,6 +246,40 @@ class Menu extends JFrame implements ActionListener{
             JOptionPane.showMessageDialog(null,"Nincs kiválasztva sor","Hiba",JOptionPane.ERROR_MESSAGE); // hibakezelés
         }
     }
+    public void AddRow(){
+        JFrame selectFrame = new JFrame();
+        JButton amd,intel,nvidia;
+
+        amd = new JButton("AMD");
+        amd.setBounds(20,30,100,50);
+        amd.setBackground(Color.lightGray);
+        amd.addActionListener(AmdAction -> {
+            AddRowAMD();
+        });
+
+        intel = new JButton("Intel");
+        intel.setBounds(120,30,100,50);
+        intel.setBackground(Color.lightGray);
+        intel.addActionListener(IntelAction ->{
+            AddRowIntel();
+        });
+
+        nvidia = new JButton("Nvidia");
+        nvidia.setBounds(220,30,100,50);
+        nvidia.setBackground(Color.lightGray);
+        nvidia.addActionListener(NvidiaAction->{
+            AddRowNvidia();
+        });
+
+        selectFrame.add(amd);
+        selectFrame.add(intel);
+        selectFrame.add(nvidia);
+
+        selectFrame.setLocationRelativeTo(null);
+        selectFrame.setLayout(null);
+        selectFrame.setSize(360,150);
+        selectFrame.setVisible(true);
+    }
     public void AddRowAMD(){
         JFrame mod = new JFrame(); //Panel létrehozása
 
@@ -330,9 +332,7 @@ class Menu extends JFrame implements ActionListener{
 
         // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
         Confirm.addActionListener(e -> {
-            String[][] row = new String[][]{{"0","AMD", String.valueOf(Brandbox.getSelectedItem()), String.valueOf(Amdbox.getSelectedItem()), String.valueOf(Vramspinner.getValue()),
-                    String.valueOf(Tdpspinner.getValue()), String.valueOf(VValue.getValue()),Name.getText()}};
-            model.addRow(row);
+            model.addRow(new Object[]{"0","AMD",Brandbox.getSelectedItem(),Amdbox.getSelectedItem(),Vramspinner.getValue(),Tdpspinner.getValue(),VValue.getValue(),Name.getText()});
             JOptionPane.showMessageDialog(null,"Sikeres hozzáadás");
         });
         //Gomb action vége
@@ -410,8 +410,8 @@ class Menu extends JFrame implements ActionListener{
 
         // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
         Confirm.addActionListener(e -> {
-
-            JOptionPane.showMessageDialog(null,"Sikeres módosítás");
+            model.addRow(new Object[]{"0","AMD",Brandbox.getSelectedItem(),Nvidiabox.getSelectedItem(),Vramspinner.getValue(),Tdpspinner.getValue(),VValue.getValue(),Name.getText()});
+            JOptionPane.showMessageDialog(null,"Sikeres hozzáadás");
         });
         //Gomb action vége
 
@@ -488,8 +488,8 @@ class Menu extends JFrame implements ActionListener{
 
         // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
         Confirm.addActionListener(e -> {
-
-            JOptionPane.showMessageDialog(null,"Sikeres módosítás");
+            model.addRow(new Object[]{"0","AMD",Brandbox.getSelectedItem(),Intelbox.getSelectedItem(),Vramspinner.getValue(),Tdpspinner.getValue(),VValue.getValue(),Name.getText()});
+            JOptionPane.showMessageDialog(null,"Sikeres hozzáadás");
         });
         //Gomb action vége
 
