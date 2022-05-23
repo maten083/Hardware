@@ -35,6 +35,7 @@ class Menu extends JFrame implements ActionListener{
 
     JTable table;
 
+    DefaultTableModel model;
 
     public void openMenu(){
 
@@ -85,7 +86,7 @@ class Menu extends JFrame implements ActionListener{
         String[] column = {"ID","Manufecturer","Brand","Type","Vram","TDP","Value","Name","Score"}; // Oszlopok
 
         Amd_graphics gpu1 = new Amd_graphics(Enums.AMD.RX550, Enums.Brand.Gigabyte,300,6,50,"Aurus");//Teszt példányok
-        Intel_graphics gpu2 = new Intel_graphics(Enums.Intel.Iris_X, Enums.Brand.Gigabyte,33,2,22,"Szar");//Teszt példányok
+        Intel_graphics gpu2 = new Intel_graphics(Enums.Intel.Iris_X, Enums.Brand.Gigabyte,50,2,22,"Szar");//Teszt példányok
 
         //Teszt adat
         String[][] data = new String[][] {
@@ -95,7 +96,7 @@ class Menu extends JFrame implements ActionListener{
                         String.valueOf(gpu2.getVram()), String.valueOf(gpu2.getTDP()), String.valueOf(gpu2.getValue()),gpu2.getName()}
         };
 
-        DefaultTableModel model = new DefaultTableModel(data,column);
+        model = new DefaultTableModel(data,column);
         table = new JTable(model){
             public boolean isCellEditable(int row,int column){
                 return false; //Szerkezthetőség letíltása
@@ -115,6 +116,44 @@ class Menu extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == modItem){
             Modosit();
+        }
+        if (e.getSource() == addItem){
+            JFrame selectFrame = new JFrame();
+            JButton amd,intel,nvidia;
+
+            amd = new JButton("AMD");
+            amd.setBounds(20,30,100,50);
+            amd.setBackground(Color.lightGray);
+            amd.addActionListener(AmdAction -> {
+                AddRowAMD();
+            });
+
+            intel = new JButton("Intel");
+            intel.setBounds(120,30,100,50);
+            intel.setBackground(Color.lightGray);
+            intel.addActionListener(IntelAction ->{
+                AddRowIntel();
+            });
+
+            nvidia = new JButton("Nvidia");
+            nvidia.setBounds(220,30,100,50);
+            nvidia.setBackground(Color.lightGray);
+            nvidia.addActionListener(NvidiaAction->{
+                AddRowNvidia();
+            });
+
+            selectFrame.add(amd);
+            selectFrame.add(intel);
+            selectFrame.add(nvidia);
+
+            selectFrame.setLocationRelativeTo(null);
+            selectFrame.setLayout(null);
+            selectFrame.setSize(360,150);
+            selectFrame.setVisible(true);
+            //AddRow();
+        }
+        if (e.getSource() == delItem){
+            model.removeRow(table.getSelectedRow());
         }
     }
     public void Modosit(){
@@ -238,5 +277,241 @@ class Menu extends JFrame implements ActionListener{
         }else {
             JOptionPane.showMessageDialog(null,"Nincs kiválasztva sor","Hiba",JOptionPane.ERROR_MESSAGE); // hibakezelés
         }
+    }
+    public void AddRowAMD(){
+        JFrame mod = new JFrame(); //Panel létrehozása
+
+        JLabel lb1,lb2,lb3,lb4,lb5,lb6,lb7;
+        lb1 = new JLabel("Márka");
+        lb1.setBounds(20,0,50,20);
+        lb2 = new JLabel("Típus");
+        lb2.setBounds(150,0,50,20);
+        lb3 = new JLabel("VRAM");
+        lb3.setBounds(20,60,50,20);
+        lb4 = new JLabel("TDP");
+        lb4.setBounds(100,60,50,20);
+        lb5 = new JLabel("Value");
+        lb5.setBounds(180,60,50,20);
+        lb6 = new JLabel("Megnevezés");
+        lb6.setBounds(270,0,100,20);
+
+        JComboBox<Enums.Brand> Brandbox = new JComboBox<>();// Márkák listája
+        Brandbox.setModel(new DefaultComboBoxModel<>(Enums.Brand.values()));
+        Brandbox.setBounds(20,20,90,20);
+
+        JComboBox<Enums.AMD> Amdbox = new JComboBox<>(); //AMD Lista
+        Amdbox.setModel(new DefaultComboBoxModel<>(Enums.AMD.values()));
+        Amdbox.setBounds(150,20,90,20);
+
+
+        // Számérték megadásának kezdete
+        SpinnerNumberModel Vramvalue = new SpinnerNumberModel(1,1,24,1);
+        JSpinner Vramspinner = new JSpinner(Vramvalue);
+        Vramspinner.setBounds(20,80,50,30);
+
+        SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(1,1,120,2);
+        JSpinner Tdpspinner = new JSpinner(Tdpvalue);
+        Tdpspinner.setBounds(100,80,50,30);
+
+        SpinnerNumberModel VValue = new SpinnerNumberModel(50,50,10000,20);
+        JSpinner Value = new JSpinner(VValue);
+        Value.setBounds(180,80,100,30);
+        // Számérték megadás vége
+
+        // Megnevezés megadásának kezdete
+        JTextField Name = new JTextField();
+        Name.setBounds(270,20,100,30);
+        // Megnevezés megadásának vége
+
+        // Gomb megadás
+        JButton Confirm = new JButton("Véglegesít");
+        Confirm.setBackground(Color.LIGHT_GRAY);
+        Confirm.setBounds(310,80,100,30);
+
+        // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
+        Confirm.addActionListener(e -> {
+            String[][] row = new String[][]{{"0","AMD", String.valueOf(Brandbox.getSelectedItem()), String.valueOf(Amdbox.getSelectedItem()), String.valueOf(Vramspinner.getValue()),
+                    String.valueOf(Tdpspinner.getValue()), String.valueOf(VValue.getValue()),Name.getText()}};
+            model.addRow(row);
+            JOptionPane.showMessageDialog(null,"Sikeres hozzáadás");
+        });
+        //Gomb action vége
+
+        //Panelhez való hozzáadás
+        mod.add(Confirm);
+        mod.add(Name);
+        mod.add(Value);
+        mod.add(Amdbox);
+        mod.add(Tdpspinner);
+        mod.add(Vramspinner);
+        mod.add(Brandbox);
+        mod.add(lb1);
+        mod.add(lb2);
+        mod.add(lb3);
+        mod.add(lb4);
+        mod.add(lb5);
+        mod.add(lb6);
+
+        mod.setLocationRelativeTo(null);
+        mod.setLayout(null);
+        mod.setSize(500,180);
+        mod.setVisible(true);
+        //Panelhez való hozzáadás
+    }
+    public void AddRowNvidia(){
+        JFrame mod = new JFrame(); //Panel létrehozása
+
+        JLabel lb1,lb2,lb3,lb4,lb5,lb6,lb7;
+        lb1 = new JLabel("Márka");
+        lb1.setBounds(20,0,50,20);
+        lb2 = new JLabel("Típus");
+        lb2.setBounds(150,0,50,20);
+        lb3 = new JLabel("VRAM");
+        lb3.setBounds(20,60,50,20);
+        lb4 = new JLabel("TDP");
+        lb4.setBounds(100,60,50,20);
+        lb5 = new JLabel("Value");
+        lb5.setBounds(180,60,50,20);
+        lb6 = new JLabel("Megnevezés");
+        lb6.setBounds(270,0,100,20);
+
+        JComboBox<Enums.Brand> Brandbox = new JComboBox<>();// Márkák listája
+        Brandbox.setModel(new DefaultComboBoxModel<>(Enums.Brand.values()));
+        Brandbox.setBounds(20,20,90,20);
+
+        JComboBox<Enums.Nvidia> Nvidiabox = new JComboBox<>(); //Nvidia Lista
+        Nvidiabox.setModel(new DefaultComboBoxModel<>(Enums.Nvidia.values()));
+        Nvidiabox.setBounds(150,20,90,20);
+
+
+        // Számérték megadásának kezdete
+        SpinnerNumberModel Vramvalue = new SpinnerNumberModel(1,1,24,1);
+        JSpinner Vramspinner = new JSpinner(Vramvalue);
+        Vramspinner.setBounds(20,80,50,30);
+
+        SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(1,1,120,2);
+        JSpinner Tdpspinner = new JSpinner(Tdpvalue);
+        Tdpspinner.setBounds(100,80,50,30);
+
+        SpinnerNumberModel VValue = new SpinnerNumberModel(50,50,10000,20);
+        JSpinner Value = new JSpinner(VValue);
+        Value.setBounds(180,80,100,30);
+        // Számérték megadás vége
+
+        // Megnevezés megadásának kezdete
+        JTextField Name = new JTextField();
+        Name.setBounds(270,20,100,30);
+        // Megnevezés megadásának vége
+
+        // Gomb megadás
+        JButton Confirm = new JButton("Véglegesít");
+        Confirm.setBackground(Color.LIGHT_GRAY);
+        Confirm.setBounds(310,80,100,30);
+
+        // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
+        Confirm.addActionListener(e -> {
+
+            JOptionPane.showMessageDialog(null,"Sikeres módosítás");
+        });
+        //Gomb action vége
+
+        //Panelhez való hozzáadás
+        mod.add(Confirm);
+        mod.add(Name);
+        mod.add(Value);
+        mod.add(Nvidiabox);
+        mod.add(Tdpspinner);
+        mod.add(Vramspinner);
+        mod.add(Brandbox);
+        mod.add(lb1);
+        mod.add(lb2);
+        mod.add(lb3);
+        mod.add(lb4);
+        mod.add(lb5);
+        mod.add(lb6);
+
+        mod.setLocationRelativeTo(null);
+        mod.setLayout(null);
+        mod.setSize(500,180);
+        mod.setVisible(true);
+        //Panelhez való hozzáadás
+    }
+    public void AddRowIntel(){
+        JFrame mod = new JFrame(); //Panel létrehozása
+
+        JLabel lb1,lb2,lb3,lb4,lb5,lb6,lb7;
+        lb1 = new JLabel("Márka");
+        lb1.setBounds(20,0,50,20);
+        lb2 = new JLabel("Típus");
+        lb2.setBounds(150,0,50,20);
+        lb3 = new JLabel("VRAM");
+        lb3.setBounds(20,60,50,20);
+        lb4 = new JLabel("TDP");
+        lb4.setBounds(100,60,50,20);
+        lb5 = new JLabel("Value");
+        lb5.setBounds(180,60,50,20);
+        lb6 = new JLabel("Megnevezés");
+        lb6.setBounds(270,0,100,20);
+
+        JComboBox<Enums.Brand> Brandbox = new JComboBox<>();// Márkák listája
+        Brandbox.setModel(new DefaultComboBoxModel<>(Enums.Brand.values()));
+        Brandbox.setBounds(20,20,90,20);
+
+        JComboBox<Enums.Intel> Intelbox = new JComboBox<>(); //Nvidia Lista
+        Intelbox.setModel(new DefaultComboBoxModel<>(Enums.Intel.values()));
+        Intelbox.setBounds(150,20,90,20);
+
+
+        // Számérték megadásának kezdete
+        SpinnerNumberModel Vramvalue = new SpinnerNumberModel(1,1,24,1);
+        JSpinner Vramspinner = new JSpinner(Vramvalue);
+        Vramspinner.setBounds(20,80,50,30);
+
+        SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(1,1,120,2);
+        JSpinner Tdpspinner = new JSpinner(Tdpvalue);
+        Tdpspinner.setBounds(100,80,50,30);
+
+        SpinnerNumberModel VValue = new SpinnerNumberModel(50,50,10000,20);
+        JSpinner Value = new JSpinner(VValue);
+        Value.setBounds(180,80,100,30);
+        // Számérték megadás vége
+
+        // Megnevezés megadásának kezdete
+        JTextField Name = new JTextField();
+        Name.setBounds(270,20,100,30);
+        // Megnevezés megadásának vége
+
+        // Gomb megadás
+        JButton Confirm = new JButton("Véglegesít");
+        Confirm.setBackground(Color.LIGHT_GRAY);
+        Confirm.setBounds(310,80,100,30);
+
+        // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
+        Confirm.addActionListener(e -> {
+
+            JOptionPane.showMessageDialog(null,"Sikeres módosítás");
+        });
+        //Gomb action vége
+
+        //Panelhez való hozzáadás
+        mod.add(Confirm);
+        mod.add(Name);
+        mod.add(Value);
+        mod.add(Intelbox);
+        mod.add(Tdpspinner);
+        mod.add(Vramspinner);
+        mod.add(Brandbox);
+        mod.add(lb1);
+        mod.add(lb2);
+        mod.add(lb3);
+        mod.add(lb4);
+        mod.add(lb5);
+        mod.add(lb6);
+
+        mod.setLocationRelativeTo(null);
+        mod.setLayout(null);
+        mod.setSize(500,180);
+        mod.setVisible(true);
+        //Panelhez való hozzáadás
     }
 }
