@@ -16,8 +16,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        System.out.println("Shit!");
-        System.out.println("igen-szbkkk");
+
         Menu start = new Menu();
         start.openMenu();
 
@@ -31,11 +30,10 @@ class Menu extends JFrame implements ActionListener{
     JMenuItem addItem;
     JMenuItem delItem;
     JMenuItem modItem;
-
-
     JTable table;
 
     DefaultTableModel model;
+
 
     public void openMenu(){
 
@@ -51,8 +49,9 @@ class Menu extends JFrame implements ActionListener{
 
         JMenuBar menubar = new JMenuBar();
         setJMenuBar(menubar);
-        JMenu file = new JMenu("File");
-        modItem = new JMenuItem("Modification"){ //csak azért hogy ne foglalja el az összes helyet a menubar-ban
+        JMenu file = new JMenu("File ");
+
+        modItem = new JMenuItem("Edit Row"){ //csak azért hogy ne foglalja el az összes helyet a menubar-ban
             @Override
             public Dimension getMaximumSize(){
                 Dimension d1 = super.getPreferredSize();
@@ -62,19 +61,19 @@ class Menu extends JFrame implements ActionListener{
             }
         };
 
-        openItem = new JMenuItem("- Open -");
+
         addItem = new JMenuItem("- Add data -");
         delItem = new JMenuItem("- Delete data -");
 
 
         menubar.add(file);
         menubar.add(modItem);
+        menubar.add(calcScoreItem);
 
-        file.add(openItem);
         file.add(addItem);
         file.add(delItem);
 
-        openItem.addActionListener(this);
+        calcScoreItem.addActionListener(this);
         addItem.addActionListener(this);
         delItem.addActionListener(this);
         modItem.addActionListener(this);
@@ -97,11 +96,15 @@ class Menu extends JFrame implements ActionListener{
         };
 
         model = new DefaultTableModel(data,column);
+
+
         table = new JTable(model){
             public boolean isCellEditable(int row,int column){
-                return false; //Szerkezthetőség letíltása
+                return false; //Szerkezthetőség letiltása
             }
-        }; // Tábla létrehozása
+        };
+
+        // Tábla létrehozása
 
         JScrollPane sp = new JScrollPane(table);
         add(sp); // Táblázat hozzáadása
@@ -114,14 +117,21 @@ class Menu extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == modItem){
+        if (e.getSource().equals(modItem)){
             Modosit();
         }
-        if (e.getSource() == addItem){
+        //Add row
+        if (e.getSource().equals(addItem)){
             AddRow();
         }
-        if (e.getSource() == delItem){
+        // Add row
+        // DELETE item ------------------------------------->
+        if (e.getSource().equals(delItem)){
             model.removeRow(table.getSelectedRow());
+        }
+        // DELETE item ------------------------------------->
+        if (e.getSource().equals(calcScoreItem)){
+            scoreCalculate();
         }
     }
     public void Modosit(){
@@ -143,9 +153,9 @@ class Menu extends JFrame implements ActionListener{
             lb6 = new JLabel("Megnevezés");
             lb6.setBounds(270,0,100,20);
 
-            JComboBox<Enums.Brand> Brandbox = new JComboBox<>();// Márkák listája
+            JComboBox<Enums.Brand> Brandbox = new JComboBox<>();// Brands list
             Brandbox.setModel(new DefaultComboBoxModel<>(Enums.Brand.values()));
-            Brandbox.getModel().setSelectedItem(String.valueOf(table.getValueAt(table.getSelectedRow(),2)));
+            Brandbox.getModel().setSelectedItem(String.valueOf(table.getValueAt(table.getSelectedRow(),1)));
             Brandbox.setBounds(20,20,90,20);
 
             JComboBox<Enums.AMD> Amdbox = new JComboBox<>(); //AMD Lista
@@ -157,9 +167,9 @@ class Menu extends JFrame implements ActionListener{
             JComboBox<Enums.Nvidia> Nvidiabox = new JComboBox<>(); // Nvidia Lista
             Nvidiabox.setModel(new DefaultComboBoxModel<>(Enums.Nvidia.values()));
 
-            // Videókárty gyártó megállapítása
-            if(String.valueOf(table.getValueAt(table.getSelectedRow(),1)).equals("AMD")){
-                Amdbox.getModel().setSelectedItem(String.valueOf(table.getValueAt(table.getSelectedRow(),3)));
+            // Videókártya gyártó megállapítása
+            if(String.valueOf(table.getValueAt(table.getSelectedRow(),0)).equals("AMD")){
+                Amdbox.getModel().setSelectedItem(String.valueOf(table.getValueAt(table.getSelectedRow(),2)));
                 Amdbox.setBounds(150,20,90,20);
                 mod.add(Amdbox);
             }else if (String.valueOf(table.getValueAt(table.getSelectedRow(),1)).equals("Intel")){
@@ -189,7 +199,7 @@ class Menu extends JFrame implements ActionListener{
 
             // Megnevezés megadásának kezdete
             JTextField Name = new JTextField();
-            Name.setText((String) table.getValueAt(table.getSelectedRow(),7));
+            Name.setText((String) table.getValueAt(table.getSelectedRow(),6));
             Name.setBounds(270,20,100,30);
             // Megnevezés megadásának vége
 
@@ -211,13 +221,13 @@ class Menu extends JFrame implements ActionListener{
                     table.setValueAt(Nvidiabox.getSelectedItem(),table.getSelectedRow(),3);
                 }
 
-                table.setValueAt(Vramvalue.getValue(),table.getSelectedRow(),4);
+                table.setValueAt(Vramvalue.getValue()+" GB",table.getSelectedRow(),3);
 
-                table.setValueAt(Tdpvalue.getValue(),table.getSelectedRow(),5);
+                table.setValueAt(Tdpvalue.getValue()+" W",table.getSelectedRow(),4);
 
-                table.setValueAt(Value.getValue()+"$",table.getSelectedRow(),6);
+                table.setValueAt(Value.getValue()+" $",table.getSelectedRow(),5);
 
-                table.setValueAt(Name.getText(),table.getSelectedRow(),7);
+                table.setValueAt(Name.getText(),table.getSelectedRow(),6);
                 JOptionPane.showMessageDialog(null,"Sikeres módosítás");
             });
             //Gomb action vége
@@ -335,6 +345,7 @@ class Menu extends JFrame implements ActionListener{
             model.addRow(new Object[]{"0","AMD",Brandbox.getSelectedItem(),Amdbox.getSelectedItem(),Vramspinner.getValue(),Tdpspinner.getValue(),VValue.getValue(),Name.getText()});
             JOptionPane.showMessageDialog(null,"Sikeres hozzáadás");
         });
+
         //Gomb action vége
 
         //Panelhez való hozzáadás
@@ -361,7 +372,7 @@ class Menu extends JFrame implements ActionListener{
     public void AddRowNvidia(){
         JFrame mod = new JFrame(); //Panel létrehozása
 
-        JLabel lb1,lb2,lb3,lb4,lb5,lb6,lb7;
+        JLabel lb1,lb2,lb3,lb4,lb5,lb6;
         lb1 = new JLabel("Márka");
         lb1.setBounds(20,0,50,20);
         lb2 = new JLabel("Típus");
@@ -437,6 +448,7 @@ class Menu extends JFrame implements ActionListener{
         //Panelhez való hozzáadás
     }
     public void AddRowIntel(){
+
         JFrame mod = new JFrame(); //Panel létrehozása
 
         JLabel lb1,lb2,lb3,lb4,lb5,lb6,lb7;
@@ -514,4 +526,68 @@ class Menu extends JFrame implements ActionListener{
         mod.setVisible(true);
         //Panelhez való hozzáadás
     }
+
+
+
+    public void scoreCalculate(){
+
+        //  (TDP/VRAM) x VALUE
+
+
+        double maxScore = 0;
+        double szam = 0;
+        int maxID = 0;
+
+        //
+        String str1 = "";
+        String vram = "";
+
+        String str2 = "";
+        String tdp = "";
+
+        String str3 = "";
+        String value = "";
+
+
+
+        for(int i = 0 ;i < model.getRowCount(); i++){
+            double calcScore = 0;
+
+            str1 = String.valueOf(model.getValueAt(i,3));
+            vram = str1.substring(0,str1.length()-3);
+            double vramDouble = Double.parseDouble(vram);
+
+            str2 = String.valueOf(model.getValueAt(i,4));
+            tdp = str2.substring(0,str2.length()-2);
+            double tdpDouble = Double.parseDouble(tdp);
+
+            str3 = String.valueOf(model.getValueAt(i,5));
+            value = str3.substring(0,str3.length()-2);
+            double valueDouble = Double.parseDouble(value);
+
+            calcScore = (tdpDouble/vramDouble)*valueDouble;
+
+            String.format("%2f",calcScore); //kerekítés
+
+            model.setValueAt(calcScore,i,7); // Fill cells
+
+            szam = (double) model.getValueAt(i,7);
+            if (szam > maxScore){
+                maxScore = szam;
+                maxID=i;
+            }
+        }
+
+        JOptionPane.showMessageDialog(null,model.getValueAt(maxID,0)+" "
+                                                                +model.getValueAt(maxID,1)+" "
+                                                                +model.getValueAt(maxID,2)+" "
+                                                                +model.getValueAt(maxID,3)+" "
+                                                                +model.getValueAt(maxID,4)+" "
+                                                                +model.getValueAt(maxID,5)+" "
+                                                                +model.getValueAt(maxID,6)+" "
+                                                                +model.getValueAt(maxID,7),"A legjobb Kártya",JOptionPane.PLAIN_MESSAGE);
+
+    }
+
+
 }

@@ -16,14 +16,3 @@ public class Amd_graphics extends Gpu {
         return type;
     }
 }
-// Videókárty gyártó megállapítása
-        /*if(String.valueOf(table.getValueAt(table.getSelectedRow(),1)).equals("AMD")){
-            Amdbox.setBounds(260,20,90,20);
-            mod.add(Amdbox);
-        }else if (String.valueOf(table.getValueAt(table.getSelectedRow(),1)).equals("Intel")){
-            Intelbox.setBounds(260,20,90,20);
-            mod.add(Intelbox);
-        }else if(String.valueOf(table.getValueAt(table.getSelectedRow(),1)).equals("Nvidia")){
-            Nvidiabox.setBounds(260,20,90,20);
-            mod.add(Nvidiabox);
-        }*/
