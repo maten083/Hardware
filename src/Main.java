@@ -604,5 +604,6 @@ class Menu extends JFrame implements ActionListener{
     }
         // commiting test....
         //talán műkszik------
+        //Na mostmár műkszik, lehet faszán commit&push-olni
 
 }
