@@ -7,10 +7,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.DecimalFormat;
 
 public class Main {
 
@@ -95,6 +91,7 @@ class Menu extends JFrame implements ActionListener{
         String[] column = {"Manufecturer","Brand","Type","Vram","TDP","Value","Name","Score"}; // Oszlopok
 
         Amd_graphics gpu1 = new Amd_graphics(Enums.AMD.RX550, Enums.Brand.Gigabyte,300,6,50,"Aurus");//Teszt példányok
+
         Intel_graphics gpu2 = new Intel_graphics(Enums.Intel.Iris_X, Enums.Brand.Gigabyte,50,2,22,"Szar");//Teszt példányok
 
         //Teszt adat
