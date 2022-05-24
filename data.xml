@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE GPUs SYSTEM "roles.dtd">
+<GPUs>
+    <GPU>
+        <Manufacture>AMD</Manufacture>
+        <Brand>Gigabyte</Brand>
+        <Value>4</Value>
+        <Vram>6</Vram>
+        <Tdp>7</Tdp>
+        <Name>kecske</Name>
+    </GPU>
+</GPUs>
