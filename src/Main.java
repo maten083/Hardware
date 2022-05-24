@@ -593,15 +593,15 @@ class Menu extends JFrame implements ActionListener{
         }
 
         JOptionPane.showMessageDialog(null,model.getValueAt(maxID,0)+" "
-                                                                +model.getValueAt(maxID,1)+" "
-                                                                +model.getValueAt(maxID,2)+" "
-                                                                +model.getValueAt(maxID,3)+" "
-                                                                +model.getValueAt(maxID,4)+" "
-                                                                +model.getValueAt(maxID,5)+" "
-                                                                +model.getValueAt(maxID,6)+" "
-                                                                +model.getValueAt(maxID,7),"A legjobb Kártya",JOptionPane.PLAIN_MESSAGE);
+                +model.getValueAt(maxID,1)+" "
+                +model.getValueAt(maxID,2)+" "
+                +model.getValueAt(maxID,3)+" "
+                +model.getValueAt(maxID,4)+" "
+                +model.getValueAt(maxID,5)+" "
+                +model.getValueAt(maxID,6)+" "
+                +model.getValueAt(maxID,7),"A legjobb Kártya",JOptionPane.PLAIN_MESSAGE);
 
     }
-
+        // commiting test....
 
 }

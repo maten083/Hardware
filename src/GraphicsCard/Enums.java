@@ -18,4 +18,5 @@ public class Enums {
     public enum Intel{
         Iris_X,Iris_X_MAX,ARC
     }
+
 }
