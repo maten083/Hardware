@@ -7,19 +7,20 @@ public abstract class Gpu{
 
     @getterFuncionName(value = "getManufacture",type = Enums.Manufacture.class)
     protected Enums.Manufacture manufacture;
-    @getterFuncionName(value = "getBramds", type = Enums.Brand.class)
-    protected Enums.Brand brands;
+    @getterFuncionName(value = "getBrands", type = Enums.Brand.class)
+    protected Object brands;
     @getterFuncionName(value = "getValue", type = Integer.class)
     protected int value;
     @getterFuncionName(value = "getVram", type = Integer.class)
     protected int vram;
-    @getterFuncionName(value = "getTdp",type = Integer.class)
+    @getterFuncionName(value = "getTDP",type = Integer.class)
     protected int TDP;
     @getterFuncionName(value = "getName",type = String.class)
     protected String name;
+    @getterFuncionName(value = "getType", type = Enums.class)
+    protected Object type;
 
-
-    public Gpu(Enums.Brand brands,int value,int vram,int TDP,String name){
+    public Gpu(Object brands, int value, int vram, int TDP, String name){
         this.brands = brands;
         this.value = value;
         this.vram = vram;
@@ -31,7 +32,7 @@ public abstract class Gpu{
         return manufacture;
     }
 
-    public Enums.Brand getBrands() {
+    public Object getBrands() {
         return brands;
     }
 

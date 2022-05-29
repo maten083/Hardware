@@ -1,6 +1,8 @@
 import GraphicsCard.Annotations.getterFuncionName;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,9 +14,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class XMLsave<T> {
     public Boolean mentes(T peldany) {
@@ -25,10 +25,22 @@ public class XMLsave<T> {
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer t = tf.newTransformer();
 
-            String filelname = peldany.getClass().getSimpleName() + ".xml";
+            String filelname = "Gpu.xml";
             File f = new File(filelname);
+            if(!(f.exists() && f.isFile())){
+                f.createNewFile();
+                Document xml = db.newDocument();
+                xml.setXmlVersion("1.0");
+                t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 
-            t.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                String foElemNev = peldany.getClass().getName();
+                Element foelem = xml.createElement("Gpu");
+                xml.appendChild(foelem);
+
+                DOMSource source = new DOMSource(xml);
+                StreamResult result = new StreamResult(f);
+                t.transform(source, result);
+            }
             //FILE EXIST ------------------------------------------------------>
 
             Map<String, String[]> adatok = new HashMap<>();
@@ -81,6 +93,43 @@ public class XMLsave<T> {
         }
         return false;
     }
+
+    public List<String[]> betoltes(){
+        String filename = "GPU.xml";
+        List<String[]> egyedek = new ArrayList<>();
+        try{
+            File f = new File(filename);
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document xml = db.parse(f);
+            xml.normalize();
+            NodeList nodes = xml.getChildNodes().item(0).getChildNodes();
+            //Videókártyák
+            for(int i = 0; i < nodes.getLength(); i++){
+
+                Node node = nodes.item(i);
+                Element elem = (Element)node;
+
+                NodeList tulajdonsagok = elem.getChildNodes();
+
+                String[] videokartya = new String[tulajdonsagok.getLength()];
+                //Videókártya tulajdonságai
+                for(int j = 0; j < tulajdonsagok.getLength(); j++){
+                    Element tulajdonsag = (Element)tulajdonsagok.item(j);
+
+                    String adat = tulajdonsag.getTextContent();
+                    videokartya[j] = adat;
+
+                }
+                egyedek.add(videokartya);
+            }
+
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return egyedek;
+    }
+
 }
 
 
