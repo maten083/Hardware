@@ -98,12 +98,14 @@ public class XMLsave<T> {
         String filename = "GPU.xml";
         List<String[]> egyedek = new ArrayList<>();
         try{
+
             File f = new File(filename);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document xml = db.parse(f);
             xml.normalize();
             NodeList nodes = xml.getChildNodes().item(0).getChildNodes();
+
             //Videókártyák
             for(int i = 0; i < nodes.getLength(); i++){
 

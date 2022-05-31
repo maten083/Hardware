@@ -23,6 +23,9 @@ public class Main {
 
 class Menu extends JFrame implements ActionListener{
 
+    JFrame modosit;
+    JFrame addmenu;
+    JFrame selectFrame;
     JMenuItem calcScoreItem;
     JMenuItem addItem;
     JMenuItem delItem;
@@ -129,16 +132,17 @@ class Menu extends JFrame implements ActionListener{
 
         setSize(800,800);
         setVisible(true);
+        scoreCalculate();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(modItem)){
-            Modosit();
+            Modosit(modosit);
         }
         //Add row
         if (e.getSource().equals(addItem)){
-            AddRow();
+            AddRow(selectFrame);
         }
         // Add row
         // DELETE item ------------------------------------->
@@ -153,9 +157,11 @@ class Menu extends JFrame implements ActionListener{
             saveButton();
         }
     }
-    public void Modosit(){
+    public void Modosit(JFrame mod){
+
         if (table.getSelectedRow() != -1){
-            JFrame mod = new JFrame(); //Panel létrehozása
+
+            mod = new JFrame(); //Panel létrehozása
 
             // Címkék megadása
             JLabel lb1,lb2,lb3,lb4,lb5,lb6;
@@ -209,9 +215,10 @@ class Menu extends JFrame implements ActionListener{
             Vramspinner.setBounds(20,80,50,30);
 
             String tdpstr = String.valueOf(table.getValueAt(table.getSelectedRow(),4));
-            SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(Integer.parseInt(tdpstr.substring(0,tdpstr.length()-2)),1,500,2);
+            SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(Integer.parseInt(tdpstr.substring(0,tdpstr.length()-2)),10,400,5);
             JSpinner Tdpspinner = new JSpinner(Tdpvalue);
             Tdpspinner.setBounds(100,80,50,30);
+
 
             String Vvaluestr = String.valueOf(table.getValueAt(table.getSelectedRow(),5));
             SpinnerNumberModel VValue = new SpinnerNumberModel(Integer.parseInt(Vvaluestr.substring(0,Vvaluestr.length()-2)),50,10000,20);
@@ -282,8 +289,8 @@ class Menu extends JFrame implements ActionListener{
             JOptionPane.showMessageDialog(null,"Nincs kiválasztva sor","Hiba",JOptionPane.ERROR_MESSAGE); // hibakezelés
         }
     }
-    public void AddRow(){
-        JFrame selectFrame = new JFrame();
+    public void AddRow(JFrame selectframe){
+        selectFrame = new JFrame();
         JButton amd,intel,nvidia;
         selectFrame.setTitle("Márkák");
 
@@ -291,21 +298,22 @@ class Menu extends JFrame implements ActionListener{
         amd.setBounds(20,30,100,50);
         amd.setBackground(Color.lightGray);
         amd.addActionListener(AmdAction -> {
-            AddRowAMD();
+            AddRowAMD(addmenu);
+
         });
 
         intel = new JButton("Intel");
         intel.setBounds(120,30,100,50);
         intel.setBackground(Color.lightGray);
         intel.addActionListener(IntelAction ->{
-            AddRowIntel();
+            AddRowIntel(addmenu);
         });
 
         nvidia = new JButton("Nvidia");
         nvidia.setBounds(220,30,100,50);
         nvidia.setBackground(Color.lightGray);
         nvidia.addActionListener(NvidiaAction->{
-            AddRowNvidia();
+            AddRowNvidia(addmenu);
         });
 
         selectFrame.add(amd);
@@ -317,9 +325,10 @@ class Menu extends JFrame implements ActionListener{
         selectFrame.setSize(360,150);
         selectFrame.setVisible(true);
     }
-    public void AddRowAMD(){
-        JFrame mod = new JFrame(); //Panel létrehozása
+    public void AddRowAMD(JFrame mod){
+        mod = new JFrame(); //Panel létrehozása
         mod.setTitle("AMD");
+
 
         JLabel lb1,lb2,lb3,lb4,lb5,lb6,lb7;
         lb1 = new JLabel("Márka");
@@ -349,7 +358,7 @@ class Menu extends JFrame implements ActionListener{
         JSpinner Vramspinner = new JSpinner(Vramvalue);
         Vramspinner.setBounds(20,80,50,30);
 
-        SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(1,1,120,2);
+        SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(10,10,400,5);
         JSpinner Tdpspinner = new JSpinner(Tdpvalue);
         Tdpspinner.setBounds(100,80,50,30);
 
@@ -368,13 +377,16 @@ class Menu extends JFrame implements ActionListener{
         Confirm.setBackground(Color.LIGHT_GRAY);
         Confirm.setBounds(310,80,100,30);
 
-        // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
+        // Gomb lenyomáskor felviszi az adatokat a táblába
+        JFrame finalMod = mod;
         Confirm.addActionListener(e -> {
             if (Name.getText().equals("")){
                 JOptionPane.showMessageDialog(null,"Nem adot meg nevet","Hiba",JOptionPane.ERROR_MESSAGE);
             }else {
                 model.addRow(new Object[]{Enums.Manufacture.AMD, Brandbox.getSelectedItem(), Amdbox.getSelectedItem(), Vramspinner.getValue() + " GB", Tdpspinner.getValue() + " W", VValue.getValue() + " $", Name.getText()});
                 JOptionPane.showMessageDialog(null, "Sikeres hozzáadás");
+                finalMod.dispose();
+                AddRow(selectFrame);
             }
             });
 
@@ -399,10 +411,11 @@ class Menu extends JFrame implements ActionListener{
         mod.setLayout(null);
         mod.setSize(500,180);
         mod.setVisible(true);
+        selectFrame.dispose();
         //Panelhez való hozzáadás
     }
-    public void AddRowNvidia(){
-        JFrame mod = new JFrame(); //Panel létrehozása
+    public void AddRowNvidia(JFrame mod){
+        mod = new JFrame(); //Panel létrehozása
         mod.setTitle("Nvidia");
 
         JLabel lb1,lb2,lb3,lb4,lb5,lb6;
@@ -433,7 +446,7 @@ class Menu extends JFrame implements ActionListener{
         JSpinner Vramspinner = new JSpinner(Vramvalue);
         Vramspinner.setBounds(20,80,50,30);
 
-        SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(1,1,120,2);
+        SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(10,10,400,5);
         JSpinner Tdpspinner = new JSpinner(Tdpvalue);
         Tdpspinner.setBounds(100,80,50,30);
 
@@ -452,13 +465,16 @@ class Menu extends JFrame implements ActionListener{
         Confirm.setBackground(Color.LIGHT_GRAY);
         Confirm.setBounds(310,80,100,30);
 
-        // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
+        // Gomb lenyomáskor felviszi az adatokat a táblába
+        JFrame finalMod = mod;
         Confirm.addActionListener(e -> {
             if (Name.getText().equals("")){
                 JOptionPane.showMessageDialog(null,"Nem adot meg nevet","Hiba",JOptionPane.ERROR_MESSAGE);
             }else {
                 model.addRow(new Object[]{Enums.Manufacture.Nvidia, Brandbox.getSelectedItem(), Nvidiabox.getSelectedItem(), Vramspinner.getValue() + " GB", Tdpspinner.getValue() + " W", VValue.getValue() + " $", Name.getText()});
                 JOptionPane.showMessageDialog(null, "Sikeres hozzáadás");
+                finalMod.dispose();
+                AddRow(selectFrame);
             }
             });
         //Gomb action vége
@@ -482,11 +498,12 @@ class Menu extends JFrame implements ActionListener{
         mod.setLayout(null);
         mod.setSize(500,180);
         mod.setVisible(true);
+        selectFrame.dispose();
         //Panelhez való hozzáadás
     }
-    public void AddRowIntel(){
+    public void AddRowIntel(JFrame mod){
 
-        JFrame mod = new JFrame(); //Panel létrehozása
+        mod = new JFrame(); //Panel létrehozása
         mod.setTitle("Intel");
         JLabel lb1,lb2,lb3,lb4,lb5,lb6,lb7;
         lb1 = new JLabel("Márka");
@@ -516,7 +533,7 @@ class Menu extends JFrame implements ActionListener{
         JSpinner Vramspinner = new JSpinner(Vramvalue);
         Vramspinner.setBounds(20,80,50,30);
 
-        SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(1,1,120,2);
+        SpinnerNumberModel Tdpvalue = new SpinnerNumberModel(10,10,400,5);
         JSpinner Tdpspinner = new JSpinner(Tdpvalue);
         Tdpspinner.setBounds(100,80,50,30);
 
@@ -535,13 +552,16 @@ class Menu extends JFrame implements ActionListener{
         Confirm.setBackground(Color.LIGHT_GRAY);
         Confirm.setBounds(310,80,100,30);
 
-        // Gomb lenyomáskor kicseréli a táblázatban lévőket a megadott adatokra
+        // Gomb lenyomáskor felviszi az adatokat a táblába
+        JFrame finalMod = mod;
         Confirm.addActionListener(e -> {
             if (Name.getText().equals("")){
                 JOptionPane.showMessageDialog(null,"Nem adot meg nevet","Hiba",JOptionPane.ERROR_MESSAGE);
             }else {
                 model.addRow(new Object[]{Enums.Manufacture.Intel, Brandbox.getSelectedItem(), Intelbox.getSelectedItem(), Vramspinner.getValue() + " GB", Tdpspinner.getValue() + " W", VValue.getValue() + " $", Name.getText()});
                 JOptionPane.showMessageDialog(null, "Sikeres hozzáadás");
+                finalMod.dispose();
+                AddRow(selectFrame);
             }
             });
         //Gomb action vége
@@ -565,110 +585,110 @@ class Menu extends JFrame implements ActionListener{
         mod.setLayout(null);
         mod.setSize(500,180);
         mod.setVisible(true);
+        selectFrame.dispose();
         //Panelhez való hozzáadás
     }
-
-
-
-    public void scoreCalculate(){
+    public void scoreCalculate() {
 
         //  (TDP/VRAM) x VALUE
+        if (model.getRowCount()>0) {
+            double maxScore = 0;
+            double szam = 0;
+            int maxID = 0;
+
+            //
+            String str1 = "";
+            String vram = "";
+
+            String str2 = "";
+            String tdp = "";
+
+            String str3 = "";
+            String value = "";
 
 
-        double maxScore = 0;
-        double szam = 0;
-        int maxID = 0;
+            for (int i = 0; i < model.getRowCount(); i++) {
+                double calcScore = 0;
 
-        //
-        String str1 = "";
-        String vram = "";
+                str1 = String.valueOf(model.getValueAt(i, 3));
+                vram = str1.substring(0, str1.length() - 3);
+                double vramDouble = Double.parseDouble(vram);
 
-        String str2 = "";
-        String tdp = "";
+                str2 = String.valueOf(model.getValueAt(i, 4));
+                tdp = str2.substring(0, str2.length() - 2);
+                double tdpDouble = Double.parseDouble(tdp);
 
-        String str3 = "";
-        String value = "";
+                str3 = String.valueOf(model.getValueAt(i, 5));
+                value = str3.substring(0, str3.length() - 2);
+                double valueDouble = Double.parseDouble(value);
 
+                calcScore = (tdpDouble / vramDouble) * valueDouble;
 
+                String.format("%2f", calcScore); //kerekítés
 
-        for(int i = 0 ;i < model.getRowCount(); i++){
-            double calcScore = 0;
+                model.setValueAt(calcScore, i, 7); // Fill cells
 
-            str1 = String.valueOf(model.getValueAt(i,3));
-            vram = str1.substring(0,str1.length()-3);
-            double vramDouble = Double.parseDouble(vram);
-
-            str2 = String.valueOf(model.getValueAt(i,4));
-            tdp = str2.substring(0,str2.length()-2);
-            double tdpDouble = Double.parseDouble(tdp);
-
-            str3 = String.valueOf(model.getValueAt(i,5));
-            value = str3.substring(0,str3.length()-2);
-            double valueDouble = Double.parseDouble(value);
-
-            calcScore = (tdpDouble/vramDouble)*valueDouble;
-
-            String.format("%2f",calcScore); //kerekítés
-
-            model.setValueAt(calcScore,i,7); // Fill cells
-
-            szam = (double) model.getValueAt(i,7);
-            if (szam > maxScore){
-                maxScore = szam;
-                maxID=i;
+                szam = (double) model.getValueAt(i, 7);
+                if (szam > maxScore) {
+                    maxScore = szam;
+                    maxID = i;
+                }
             }
+
+            JOptionPane.showMessageDialog(null, model.getValueAt(maxID, 0) + " "
+                    + model.getValueAt(maxID, 1) + " "
+                    + model.getValueAt(maxID, 2) + " "
+                    + model.getValueAt(maxID, 3) + " "
+                    + model.getValueAt(maxID, 4) + " "
+                    + model.getValueAt(maxID, 5) + " "
+                    + model.getValueAt(maxID, 6) + " "
+                    + model.getValueAt(maxID, 7), "A legjobb Kártya", JOptionPane.PLAIN_MESSAGE);
+
+
+        }else{
+            JOptionPane.showMessageDialog(null,"Nincs sor amiből számolna!","Error",JOptionPane.ERROR_MESSAGE);
         }
-
-        JOptionPane.showMessageDialog(null,model.getValueAt(maxID,0)+" "
-                +model.getValueAt(maxID,1)+" "
-                +model.getValueAt(maxID,2)+" "
-                +model.getValueAt(maxID,3)+" "
-                +model.getValueAt(maxID,4)+" "
-                +model.getValueAt(maxID,5)+" "
-                +model.getValueAt(maxID,6)+" "
-                +model.getValueAt(maxID,7),"A legjobb Kártya",JOptionPane.PLAIN_MESSAGE);
-
     }
-
      public void saveButton(){
+
         File file = new File("Gpu.xml");
         file.delete();
+
          Object brand;
          int value = 0;
          int vram = 0;
          int tdp = 0;
          String name = "";
          String manufactura;
-         boolean igen = false;
+         XMLsave<Object> xml = new XMLsave<Object>();
+
          for (int i = 0;i<model.getRowCount();i++){
+
              manufactura = String.valueOf(model.getValueAt(i,0));
              value = Integer.parseInt(String.valueOf(model.getValueAt(i,5)).split(" ")[0]);
              vram = Integer.parseInt(String.valueOf(model.getValueAt(i,4)).split(" ")[0]);
              tdp = Integer.parseInt(String.valueOf(model.getValueAt(i,3)).split(" ")[0]);
              name = (String) model.getValueAt(i,6);
+
              if (manufactura.equals(Enums.Manufacture.AMD.toString())){
-                 XMLsave<Object> xml = new XMLsave<Object>();
                  Object type = model.getValueAt(i,2);
                  brand =  model.getValueAt(i,1);
-
                  Amd_graphics gpu = new Amd_graphics(type,brand,value,tdp,vram,name);
 
                  xml.mentes(gpu);
 
              }else if(manufactura.equals(Enums.Manufacture.Nvidia.toString())){
-                 XMLsave<Object> xml = new XMLsave<Object>();
                  Object type = model.getValueAt(i,2);
                  brand = (Enums.Brand) model.getValueAt(i,1);
-
                  Nvidia_graphics gpu = new Nvidia_graphics(type,brand,value,tdp,vram,name);
+
                  xml.mentes(gpu);
 
              }else if (manufactura.equals(Enums.Manufacture.Intel.toString())){
-                 XMLsave<Object> xml = new XMLsave<Object>();
                  Object type = model.getValueAt(i,2);
                  brand =  model.getValueAt(i,1);
-
                  Intel_graphics gpu = new Intel_graphics(type,brand,value,tdp,vram,name);
+
                  xml.mentes(gpu);
              }
          }
@@ -692,9 +712,8 @@ class Menu extends JFrame implements ActionListener{
              return data;
          }else {
              String[][] data = new String[0][0];
-             JOptionPane.showMessageDialog(null,"Nem létező vagy üres fájl miatt tábla lett beállítva","Error",JOptionPane.ERROR_MESSAGE);
+             JOptionPane.showMessageDialog(null,"Nem létező / üres fájl miatt: üres tábla lett beállítva","Error",JOptionPane.ERROR_MESSAGE);
              return data;
          }
      }
-
 }
